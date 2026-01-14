@@ -1,0 +1,23 @@
+#define _POSIX_C_SOURCE 200809l
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(int argc, char *argv[]) {
+  printf("Please enter some text: ");
+  char *lineptr = NULL;
+  size_t size = 0;
+  ssize_t readCharacters = getline(&lineptr, &size, stdin);
+
+  char *savePtr = NULL;
+  char *nextToken = NULL;
+  char *nextToken2 = NULL;
+  nextToken = strtok_r(lineptr, " ", &savePtr);
+  printf("%s", nextToken);
+
+  nextToken2 = strtok_r(NULL, " ", &savePtr);
+  printf("%s", nextToken2);
+  free(lineptr);
+
+  return 0;
+}
