@@ -1,0 +1,39 @@
+#define _POSIX_C_SOURCE 200809l
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(int argc, char *argv[]) {
+  char *lineptr = NULL;
+  size_t size = 0;
+  char *savePtr = NULL;
+  char *nextToken = NULL;
+  ssize_t readCharacters = 0;
+
+  while (readCharacters != 1 && readCharacters != -1) {
+    printf("Please enter some text: ");
+    readCharacters = getline(&lineptr, &size, stdin);
+    if (readCharacters == -1) {
+      perror("error occurred");
+      exit(EXIT_FAILURE);
+    }
+    printf("Tokens:\n");
+
+    do {
+      nextToken = strtok_r(lineptr, " ", &savePtr);
+      if (lineptr != NULL)
+        free(lineptr);
+
+      if (nextToken != NULL)
+        printf(" %s\n", nextToken);
+
+      lineptr = NULL;
+    } while (nextToken != NULL);
+    savePtr = NULL;
+    lineptr = NULL;
+  }
+
+  if (lineptr != NULL)
+    free(lineptr);
+  return 0;
+}
