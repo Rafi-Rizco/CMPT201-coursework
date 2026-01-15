@@ -9,28 +9,37 @@ int main(int argc, char *argv[]) {
   char *savePtr = NULL;
   char *nextToken = NULL;
   ssize_t readCharacters = 0;
+  char *tempPtr = NULL;
 
   while (readCharacters != 1 && readCharacters != -1) {
     printf("Please enter some text: ");
     readCharacters = getline(&lineptr, &size, stdin);
+
     if (readCharacters == -1) {
       perror("error occurred");
+      if (lineptr != NULL)
+        free(lineptr);
+
       exit(EXIT_FAILURE);
     }
-    nextToken = strtok_r(lineptr, " ", &savePtr);
-    if (nextToken != NULL)
-      printf("Tokens:\n %s\n", nextToken);
 
-    nextToken = strtok_r(NULL, " ", &savePtr);
+    printf("Tokens:\n");
+    tempPtr = lineptr;
 
-    while (nextToken != NULL) {
-      printf(" %s\n", nextToken);
-      nextToken = strtok_r(NULL, " ", &savePtr);
-    }
+    do {
+      nextToken = strtok_r(lineptr, " ", &savePtr);
+      lineptr = NULL;
+
+      if (nextToken != NULL)
+        printf(" %s\n", nextToken);
+    } while (nextToken != NULL);
 
     savePtr = NULL;
+    lineptr = tempPtr;
   }
 
-  free(lineptr);
+  if (lineptr != NULL)
+    free(lineptr);
+
   return 0;
 }
