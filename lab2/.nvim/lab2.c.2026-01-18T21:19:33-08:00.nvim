@@ -1,0 +1,51 @@
+#define _POSIX_C_SOURCE 200809l
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+int main(int argc, char *argv[]) {
+  char *lineptr = NULL;
+  size_t size = 0;
+  char *saveptr = NULL;
+  char *nextToken = NULL;
+  ssize_t readCharacters = 0;
+  char *tempptr = NULL;
+  char *pathCopy = NULL;
+  pid_t forked;
+
+  while (1) {
+    printf("Enter programs to run.\n");
+    readCharacters = getline(&lineptr, &size, stdin);
+
+    if (readCharacters == -1) {
+      perror("error occurred");
+      if (lineptr != NULL)
+        free(lineptr);
+
+      exit(EXIT_FAILURE);
+    }
+
+    if (lineptr[strlen(lineptr) - 1] == '\n')
+      lineptr[strlen(lineptr) - 1] = '\0';
+
+    printf("%s", lineptr);
+    //strcpy(pathCopy, lineptr);
+    tempptr = lineptr;
+
+    forked = fork();
+    waitpid(forked, NULL, 0);
+    if (forked == 0) {
+      execl(lineptr, lineptr, (char *)NULL);
+    }
+
+    // do {
+    //  nextToken = strtok_r(lineptr, "/", &saveptr);
+    // lineptr = NULL;
+
+    // if (nextToken != NULL)
+    //  printf(" %s\n", nextToken);
+    // } while (nextToken != NULL);
+  }
+}

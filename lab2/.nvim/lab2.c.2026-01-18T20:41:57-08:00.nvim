@@ -1,0 +1,37 @@
+#define _POSIX_C_SOURCE 200809l
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(int argc, char *argv[]) {
+  char *lineptr = NULL;
+  size_t size = 0;
+  char *saveptr = NULL;
+  char *nextToken = NULL;
+  ssize_t readCharacters = 0;
+  char *tempptr = NULL;
+
+  while (1) {
+    printf("Enter programs to run.\n");
+    readCharacters = getline(&lineptr, &size, stdin);
+
+    if (readCharacters == -1) {
+      perror("error occurred");
+      if (lineptr != NULL)
+        free(lineptr);
+
+      exit(EXIT_FAILURE);
+    }
+
+    printf("%s", lineptr);
+    tempptr = lineptr;
+
+    do {
+      nextToken = strtok_r(lineptr, " ", &savePtr);
+      lineptr = NULL;
+
+      if (nextToken != NULL)
+        printf(" %s\n", nextToken);
+    } while (nextToken != NULL);
+  }
+}
