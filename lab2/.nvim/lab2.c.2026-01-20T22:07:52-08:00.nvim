@@ -11,8 +11,6 @@ int main(int argc, char *argv[]) {
   ssize_t readCharacters = 0;
   pid_t forked;
   int wstatus = 0;
-  char *saveptr = NULL;
-  char *currentAddress = NULL;
 
   while (1) {
     printf("Enter programs to run.\n");
@@ -26,20 +24,17 @@ int main(int argc, char *argv[]) {
       exit(EXIT_FAILURE);
     }
 
-    // grabs the part of the path leading up to the command, without any spaces
-    // after
-    currentAddress = strtok_r(lineptr, " ", &saveptr);
     if (lineptr[strlen(lineptr) - 1] == '\n')
       lineptr[strlen(lineptr) - 1] = '\0';
 
     forked = fork();
-    if (forked == 0) {
-      execl(currentAddress, currentAddress, (char *)NULL);
+    if(forked == 0){
+      execl(lineptr, lineptr, (char *)NULL);
       perror("exec failed");
       exit(EXIT_FAILURE);
     } else {
       int error = waitpid(forked, &wstatus, 0);
-      if (error == -1) {
+      if(error == -1){
         perror("waitpid failed");
         exit(EXIT_FAILURE);
       }

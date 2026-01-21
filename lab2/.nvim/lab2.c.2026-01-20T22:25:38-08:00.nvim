@@ -25,9 +25,8 @@ int main(int argc, char *argv[]) {
 
       exit(EXIT_FAILURE);
     }
-
-    // grabs the part of the path leading up to the command, without any spaces
-    // after
+    
+    // grabs the part of the path leading up to the command, without any spaces after
     currentAddress = strtok_r(lineptr, " ", &saveptr);
     if (lineptr[strlen(lineptr) - 1] == '\n')
       lineptr[strlen(lineptr) - 1] = '\0';
