@@ -1,0 +1,80 @@
+#define _POSIX_C_SOURCE 200809l
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void insert_history(char **inputHistory, char *lineptr) {
+  if (inputHistory[4] == NULL) {
+    int i = 0;
+    while (inputHistory[i] != NULL)
+      i++;
+
+    inputHistory[i] = strdup(lineptr);
+  } else {
+    free(inputHistory[0]);
+    for (int i = 0; i < 4; i++)
+      inputHistory[i] = inputHistory[i + 1];
+
+    inputHistory[4] = strdup(lineptr);
+  }
+}
+
+void print_history(char **inputHistory) {
+  if (inputHistory[4] != NULL) {
+    for (int i = 0; i < 5; i++)
+      printf("%s", inputHistory[i]);
+  } else {
+    int i = 0;
+    while (inputHistory[i] != NULL) {
+      printf("%s", inputHistory[i]);
+      i++;
+    }
+  }
+}
+
+int main(int argc, char *argv[]) {
+  char *lineptr = NULL;
+  size_t size = 0;
+  ssize_t readCharacters = 0;
+  char **inputHistory = (char **)malloc(5 * sizeof(char *));
+  if (inputHistory == NULL) {
+    perror("malloc failed");
+    exit(EXIT_FAILURE);
+  }
+
+  for (int i = 0; i < 5; i++)
+    inputHistory[i] = NULL;
+
+  while (1) {
+    printf("Enter input: ");
+    readCharacters = getline(&lineptr, &size, stdin);
+    if (readCharacters == -1) {
+      perror("getline failed");
+      if (lineptr != NULL)
+        free(lineptr);
+
+      exit(EXIT_FAILURE);
+    }
+
+    if (strcmp(lineptr, "\n") == 0)
+      continue;
+
+    if (strcmp(lineptr, "print\n") == 0) {
+      insert_history(inputHistory, lineptr);
+      print_history(inputHistory);
+    } else
+      insert_history(inputHistory, lineptr);
+  }
+
+  if (lineptr != NULL)
+    free(lineptr);
+
+  if (inputHistory != NULL) {
+    int i = 0;
+    while (inputHistory[i] != NULL) {
+      free(inputHistory[i]);
+      i++;
+    }
+    free(inputHistory);
+  }
+}
