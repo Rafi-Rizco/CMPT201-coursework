@@ -1,0 +1,58 @@
+#define _DEFAULT_SOURCE
+#include <error.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+struct header {
+  uint64_t size;
+  struct header *next;
+};
+
+void print_out(char *format, void *data, size_t data_size) {
+  char buf[128];
+  ssize_t len = snprintf(buf, 128, format,
+                         data_size == sizeof(uint64_t) ? *(uint64_t *)data
+                                                       : *(void **)data);
+  if (len < 0) {
+    perror("snprintf");
+  }
+  write(STDOUT_FILENO, buf, len);
+}
+
+int main(int argc, char *argv[]) {
+
+  struct header *head = (struct header *)sbrk(256);
+  head->size = 128;
+  head->next = NULL;
+
+  struct header *nextHead = (struct header *)((void *)head + 128);
+  nextHead->size = 128;
+  nextHead->next = NULL;
+
+  nextHead->next = head;
+
+  memset((char*)head + sizeof(struct header *), 0, 128);
+  memset((char*)nextHead + sizeof(struct header *), 1, 128);
+
+  print_out("first block:       %p\n", &head, sizeof(head));
+  print_out("second block:      %p\n", &nextHead, sizeof(nextHead));
+  print_out("first block size:   %d\n", &(head->size), sizeof(head->size));
+  print_out("first block next:  %p\n", &(head->next), sizeof(head->next));
+  print_out("second block size: %d\n", &(nextHead->size),
+            sizeof(nextHead->size));
+  print_out("second block next: %p\n", &(nextHead->next),
+            sizeof(nextHead->next));
+
+  uint8_t *data = (uint8_t *)((char *)head + sizeof(struct header *));
+  for (int i = 0; i < 128 - sizeof(struct header *); i++) {
+
+    print_out("%d\n", data, sizeof(data));
+    data = (uint8_t *)((char *)head + i);
+  }
+
+  return 0;
+}
