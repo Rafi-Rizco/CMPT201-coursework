@@ -27,6 +27,7 @@ int find_first_fit(struct header *free_list_ptr, uint64_t size) {
       return temp_head->id;
 
     temp_head = temp_head->next;
+    printf("im in first fit");
   }
 
   if (temp_head->size >= size)
@@ -63,7 +64,8 @@ int find_best_fit(struct header *free_list_ptr, uint64_t size) {
         best_size = temp_head->size;
       }
     }
-    temp_head = temp_head->next;
+    temp_head->next = temp_head->next;
+    printf("im in best fit");
   }
 
   if (temp_head->size >= size) {
@@ -106,7 +108,8 @@ int find_worst_fit(struct header *free_list_ptr, uint64_t size) {
         worst_size = temp_head->size;
       }
     }
-    temp_head = temp_head->next;
+    temp_head->next = temp_head->next;
+    printf("im in worst fit");
   }
 
   if (temp_head->size >= size) {
@@ -150,53 +153,8 @@ int main(void) {
   int worst_fit_id = find_worst_fit(free_list_ptr, 7);
 
   // TODO: Print out the IDs
-  printf("the ID for the First-Fit algorithm is: %d\n", first_fit_id);
-  printf("the ID for the Best-Fit algorithm is: %d\n", best_fit_id);
-  printf("the ID for the Worst-Fit algorithm is: %d\n", worst_fit_id);
-
-  struct header *temp_head = NULL;
-
-  while (free_list_ptr != NULL) {
-    temp_head = free_list_ptr;
-    free_list_ptr = free_list_ptr->next;
-    free(temp_head);
-  }
-
+  printf("the ID for the First-Fit algorithm is: %d", first_fit_id);
+  printf("the ID for the Best-Fit algorithm is: %d", best_fit_id);
+  printf("the ID for the Worst-Fit algorithm is: %d", worst_fit_id);
   return 0;
 }
-
-/*
- * Coalescing algorithm
- *
- * z = freed_node
- * current_node = head_of_linked_list
- * previous_node = NULL
- *
- * while (current_node != null and current_nodes address is less than z's
- * address): do previous_node = current_node current_node = current_node->next
- * done
- *
- * z->next = current_node
- * if (prev == NULL):
- * then
- *    head_of_linked_list = z
- * else
- *    prev->next = z
- *
- *
- * if (current_node != NULL and z is adjacent to current_node in memory):
- * then
- *    merge(z, current_node)
- *
- * if (previous_nod != NULL and z is adjacent to previous_node in memory):
- * then
- *    merge(previous_node, z)
- *
- *
- *
- * merge(node1, node2):
- *    node1->size += node2->size
- *    node1->next = node2->next
- *
- *
- */

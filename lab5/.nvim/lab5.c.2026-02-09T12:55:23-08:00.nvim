@@ -155,8 +155,8 @@ int main(void) {
   printf("the ID for the Worst-Fit algorithm is: %d\n", worst_fit_id);
 
   struct header *temp_head = NULL;
-
-  while (free_list_ptr != NULL) {
+  
+  while(free_list_ptr != NULL) {
     temp_head = free_list_ptr;
     free_list_ptr = free_list_ptr->next;
     free(temp_head);
@@ -172,8 +172,10 @@ int main(void) {
  * current_node = head_of_linked_list
  * previous_node = NULL
  *
- * while (current_node != null and current_nodes address is less than z's
- * address): do previous_node = current_node current_node = current_node->next
+ * while (current_node != null and current_nodes address is less than z's address): 
+ * do
+ *   previous_node = current_node
+ *   current_node = current_node->next
  * done
  *
  * z->next = current_node
@@ -184,14 +186,14 @@ int main(void) {
  *    prev->next = z
  *
  *
- * if (current_node != NULL and z is adjacent to current_node in memory):
+ * if (current_node != NULL and z is adjacent to current_node in memory): 
  * then
  *    merge(z, current_node)
  *
  * if (previous_nod != NULL and z is adjacent to previous_node in memory):
  * then
  *    merge(previous_node, z)
- *
+ * 
  *
  *
  * merge(node1, node2):
@@ -200,3 +202,10 @@ int main(void) {
  *
  *
  */
+
+
+
+
+
+
+
