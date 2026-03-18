@@ -3,35 +3,32 @@ Questions to answer at top of server.c:
 (You should not need to change client.c)
 Understanding the Client:
 1. How is the client sending data to the server? What protocol?
- it sends the data by creating a socket and connecting to the server, where it
-writes to the server. the protocal it uses is TCP, since when creating the
-socket its using SOCK_STREAM, and connecting to the addr 127.0.0.1 on port 8001.
+ it sends the data by creating a socket and connecting to the server, where it writes to the server.
+ the protocal it uses is TCP, since when creating the socket its using SOCK_STREAM, and connecting
+ to the addr 127.0.0.1 on port 8001.
 
 2. What data is the client sending to the server?
-  it is sending 5 messages that it has in a loop that sends the messages 1 at a
-time between 1 second sleeps. the messages are "Hello", "Apple", "Car", "Green",
-"Dog".
+  it is sending 5 messages that it has in a loop that sends the messages 1 at a time between 1
+  second sleeps. the messages are "Hello", "Apple", "Car", "Green", "Dog".
 
 Understanding the Server:
 1. Explain the argument that the `run_acceptor` thread is passed as an argument.
-  the argument that run_acceptor is given is a struct that contains a bool for
-telling the run_acceptor to stop or not, a pointer to a list_handle struct which
-is a message list, and a pointer to a mutex that protects the list_handle
-struct.
+  the argument that run_acceptor is given is a struct that contains a bool for telling the
+  run_acceptor to stop or not, a pointer to a list_handle struct which is a message list, and a
+  pointer to a mutex that protects the list_handle struct.
 
 2. How are received messages stored?
-  received messages are stored as dynamically alloctaed list_nodes in the the
-shared list_handle struct. the storing of the list_node also involves using the
-mutex for it since multiple threads could be calling the add_to_list() function
+  received messages are stored as dynamically alloctaed list_nodes in the the shared list_handle
+  struct. the storing of the list_node also involves using the mutex for it since multiple threads
+  could be calling the add_to_list() function
 
 3. What does `main()` do with the received messages?
-it waits until it has collected enough messages and then outputs all the
-messages that have been stored so far, by going through the linked list of
-list_nodes
+it waits until it has collected enough messages and then outputs all the messages that have been
+stored so far, by going through the linked list of list_nodes
 
 4. How are threads used in this sample code?
-the sample code uses an acceptor thread to accept incoming client connections,
-then threads are made for each client that reads messages from the clients.
+the sample code uses an acceptor thread to accept incoming client connections, then threads are made
+for each client that reads messages from the clients.
 */
 
 #include <arpa/inet.h>
