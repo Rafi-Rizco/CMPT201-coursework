@@ -55,7 +55,7 @@ void *handle_client(void *arg) {
   }
 
   close(client->cfd);
-  printf("client %d is done\n", client->client_id);
+  printf("client %d is done", client->client_id);
   fflush(stdout);
 
   if (client != NULL)

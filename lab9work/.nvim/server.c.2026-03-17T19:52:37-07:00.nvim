@@ -36,27 +36,24 @@ void *handle_client(void *arg) {
 
   printf("file descriptor: %d\n", client->cfd);
   printf("client id: %d\n", client->client_id);
-  fflush(stdout);
   // TODO: print the message received from client
   // TODO: increase total_message_count per message
-
+  
   int num_read = 0;
 
   char buf[BUF_SIZE];
-  while ((num_read = read(client->cfd, buf, BUF_SIZE)) > 1) {
+  while ((num_read = read(client->cfd, buf, BUF_SIZE)) > 0) {
 
     pthread_mutex_lock(&count_mutex);
     total_message_count++;
-    printf("Msg #   %d; Client ID %d: ", total_message_count,
+    printf("Msg #   %d; Client ID %d:", total_message_count,
            client->client_id);
-    fflush(stdout);
     write(STDOUT_FILENO, buf, num_read);
     pthread_mutex_unlock(&count_mutex);
   }
 
   close(client->cfd);
-  printf("client %d is done\n", client->client_id);
-  fflush(stdout);
+  printf("client %d is done", client->client_id);
 
   if (client != NULL)
     free(client);
@@ -110,6 +107,7 @@ int main() {
     }
 
     pthread_detach(thread);
+
   }
 
   if (close(sfd) == -1) {

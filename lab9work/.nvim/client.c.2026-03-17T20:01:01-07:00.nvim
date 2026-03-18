@@ -2,14 +2,14 @@
 Questions to answer at top of client.c:
 (You should not need to change the code in client.c)
 1. What is the address of the server it is trying to connect to (IP address and
-port number).
+port number). 
 
   127.0.0.1,  port: 8000
 
 2. Is it UDP or TCP? How do you know?
   it is TCP, since we are using connect and UDP is connectionless while TCP uses
-connections. we are also using the SOCK_STREAM for socket(), which is for a
-connection mode which would be TCP.
+connections. we are also using the SOCK_STREAM for socket(), which is for a connection mode which
+would be TCP.
 
 3. The client is going to send some data to the server. Where does it get this
 data from? How can you tell in the code? it gets the data from the standard
@@ -17,9 +17,9 @@ input stream, std_in
 
 4. How does the client program end? How can you tell that in the code?
 
-it ends when the client presses enter with no other inputs so there is only 1
-byte read. it also ends when there is an error while reading so that num_read is
-negative, it also ends if num of bytes read is 0 (end of file).
+it ends when the client presses enter with no other inputs so there is only 1 byte read. it also
+ends when there is an error while reading so that num_read is negative, it also ends if num of bytes
+read is 0 (end of file).
 
   i could see from the while loop that keeps going until the read from input
 stream is less than 1
